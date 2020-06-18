@@ -90,10 +90,19 @@ void KalmanFilter::UpdateEKF(const VectorXd &z)
 
   VectorXd z_pred(3);
   z_pred << rho_pred, phi_pred, rhodot_pred;
-
   //Now apply the udate equations again
 
   VectorXd y = z - z_pred;
+
+  while (y(1) > M_PI)
+  {
+    y(1) -= M_PI;
+  }
+  while (y(1) < -M_PI)
+  {
+    y(1) += M_PI;
+  }
+
   MatrixXd Ht = H_.transpose();
   auto H_P = H_ * P_;
   auto H_P_Ht = H_P * Ht;
